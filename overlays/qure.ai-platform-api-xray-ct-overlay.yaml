@@ -1,0 +1,50 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Qure.ai Platform API (X-ray / qCT)
+  version: 1.0.0
+extends: openapi/qure.ai-platform-api-xray-ct-openapi.yml
+x-generated: '2026-08-26'
+x-method: generated
+x-source: >-
+  Derived from the provider's own published documentation at docs.qure.ai and
+  documentation.qure.ai.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-slug: qure.ai
+      x-apievangelist-harvested: '2026-08-26'
+      x-apievangelist-source: https://docs.qure.ai/readme/api-reference
+      x-regulatory-class: medical-device-software
+      x-domain-standard: DICOM
+      x-overlap-note: >-
+        This document overlaps the X-ray-v2/qER document. Both carry
+        POST /studies, GET /compute and GET /results; this one uniquely carries
+        fetchResultsqCT, the other uniquely carries fetchResultsv2XRay and
+        fetchResultsqER. Neither is a superset.
+  - target: $.servers[0]
+    update:
+      x-templated: true
+      x-provisioning: >-
+        BASE_URL is issued per customer per environment by support@qure.ai.
+  - target: $.paths['/studies'].post
+    update:
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        reversible: false
+        audit: required
+  - target: $.paths['/compute/{SeriesInstanceUID}'].get
+    update:
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        audit: required
+  - target: $.paths['/results/{SeriesInstanceUID}'].get
+    update:
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+      x-product: qCT
+      x-precondition: >-
+        Requires GET /compute/{SeriesInstanceUID} first; a 409 means the series
+        was never invoked for computation.

@@ -1,0 +1,16 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.qure.ai/readme/api-reference
+limit_count: 0
+limits: []
+headers: []
+exhaustion_status: null
+note: >-
+  Qure.ai publishes no rate limits for the Platform API. The API reference,
+  prerequisites and authentication pages state no quota, no throttle and no
+  concurrency ceiling; neither published OpenAPI document declares a 429
+  response or any RateLimit-*/X-RateLimit-*/Retry-After header. An honest zero —
+  this is an access-controlled partner API where the Base URL, Token and Source
+  are all issued per customer by support@qure.ai, so limits are likely set
+  contractually rather than published. An agent gets no runtime backpressure
+  signal from this API.

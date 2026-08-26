@@ -1,0 +1,118 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/qure.ai-platform-api-xray-ct-openapi.yml, openapi/qure.ai-platform-api-xray-v2-er-openapi.yml
+docs: https://docs.qure.ai/readme/troubleshooting
+format: bespoke-json
+envelope:
+  note: >-
+    Not RFC 9457. Responses carry a plain JSON object with a `success` boolean
+    (documented by the provider as deprecated and always true when present,
+    retained for backwards compatibility) and a human-readable `message` string.
+  fields:
+    - name: success
+      type: boolean
+      note: Deprecated per the provider's own spec description; do not branch on it.
+    - name: message
+      type: string
+      note: Human-readable validation of the request for the given status code.
+problems:
+  - status: 202
+    title: Accepted — processing not complete
+    detail: >-
+      The request has been accepted for processing, but predictions or analysis
+      are still underway. Poll the same results URL.
+    source_operations:
+      - fetchResultsXRay
+      - fetchResultsv2XRay
+      - fetchResultsqCT
+      - fetchResultsqER
+    retryable: true
+  - status: 206
+    title: Partial content — valid modality, invalid scan
+    detail: >-
+      The uploaded DICOM was detected as a valid X-ray modality but the scan
+      itself is invalid. Generated assets (SC, SR) accompany the response and
+      explicitly state that the DICOM is invalid, keeping the response shape
+      consistent with normal processing.
+    source_operations: [fetchResultsv2XRay]
+    retryable: false
+  - status: 304
+    title: Not modified — already queued for computation
+    detail: The DICOMs have already been pushed for computation.
+    source_operations: [initiateComputation]
+    retryable: false
+  - status: 400
+    title: Unsupported use case or invalid upload
+    detail: >-
+      Use case not implemented, no DICOMs uploaded, an unsupported modality was
+      uploaded, or the AI detected that the scan is invalid.
+    source_operations:
+      - uploadDicoms
+      - fetchResultsXRay
+      - fetchResultsv2XRay
+      - fetchResultsqCT
+      - fetchResultsqER
+    retryable: false
+    remediation: >-
+      Check the per-product DICOM Specifications page for the modality and
+      required metadata before re-uploading.
+  - status: 401
+    title: Invalid or missing token
+    detail: The Authorization header has either no token or a wrong token.
+    source_operations:
+      - uploadDicoms
+      - initiateComputation
+      - fetchResultsXRay
+      - fetchResultsv2XRay
+      - fetchResultsqCT
+      - fetchResultsqER
+    retryable: false
+    remediation: "Send `Authorization: Token <YOUR_TOKEN>`. Tokens differ per environment."
+  - status: 403
+    title: Invalid or missing Source, or cross-workspace access
+    detail: >-
+      The Source header is missing or incorrect, or results were requested for a
+      DICOM that does not belong to your workspace.
+    source_operations:
+      - initiateComputation
+      - fetchResultsXRay
+      - fetchResultsv2XRay
+      - fetchResultsqCT
+      - fetchResultsqER
+    retryable: false
+    remediation: "Send the `Source` header issued for your environment."
+  - status: 404
+    title: Image or series not found
+    detail: >-
+      The requested image or series could not be found, possibly because it has
+      not been uploaded yet.
+    source_operations:
+      - initiateComputation
+      - fetchResultsXRay
+      - fetchResultsv2XRay
+      - fetchResultsqCT
+      - fetchResultsqER
+    retryable: true
+  - status: 409
+    title: Series not yet invoked for computation
+    detail: >-
+      Results were requested for a series that has not been sent to
+      GET /compute/{SeriesInstanceUID} yet.
+    source_operations:
+      - fetchResultsXRay
+      - fetchResultsqCT
+      - fetchResultsqER
+    retryable: false
+    remediation: Call GET /compute/{SeriesInstanceUID} first, then poll results.
+  - status: 500
+    title: Qure.ai system failure
+    detail: An unknown Qure.ai system failure occurred.
+    source_operations: [fetchResultsv2XRay]
+    retryable: true
+  - status: 502
+    title: Bad gateway
+    detail: >-
+      The server is down, unresponsive, or unable to communicate with the
+      upstream server, preventing a valid response.
+    source_operations: [fetchResultsv2XRay]
+    retryable: true

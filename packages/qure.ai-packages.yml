@@ -1,0 +1,53 @@
+generated: '2026-08-26'
+method: searched
+source: registry.npmjs.org, pypi.org, github.com/qureai, https://docs.qure.ai/readme/api-reference
+packages: []
+official_count: 0
+note: >-
+  No first-party Qure.ai client library exists on any public registry. Searched
+  npm, PyPI and the provider's GitHub organization. The API documentation ships
+  only raw cURL and Python `requests` snippets — there is no SDK to install.
+negative_findings:
+  - registry: pypi
+    name: qure
+    url: https://pypi.org/project/qure/
+    status: 200
+    official: false
+    version: '0.3'
+    published: null
+    note: >-
+      NAME COLLISION, not Qure.ai. Authored by "HOZANA INEZA Fraterne Ely", homepage
+      github.com/fraterneelyh/qure — a package that generates student cards with
+      QR codes from CSV/JSON. Unrelated. `published` null because the release date
+      was not read from the registry metadata for a non-first-party collision.
+  - registry: pypi
+    names: [qure-ai, qureai, qxr]
+    status: 404
+    note: No Qure.ai-named package published to PyPI.
+  - registry: npm
+    name: qure
+    url: https://www.npmjs.com/package/qure
+    status: 200
+    official: false
+    version: 0.2.33
+    published: null
+    note: >-
+      NAME COLLISION, not Qure.ai. Maintainer `hbi99`, homepage
+      github.com/hbi99/qure.js — "Tiny library introducing an easy design
+      pattern." Unrelated.
+  - registry: npm
+    names: ["qure-ai", "@qure/sdk", "qureai"]
+    status: 404
+    note: No Qure.ai-named package published to npm.
+  - registry: github
+    org: https://github.com/qureai
+    status: 200
+    public_repos: 37
+    note: >-
+      The organization is genuine (description "Revolutionizing healthcare with
+      deep learning", blog qure.ai, location Mumbai) but carries NO first-party
+      client library. Every repository is a fork of third-party ML or medical
+      imaging tooling — ms-swift, LLaMA-Factory, unsloth, lm-evaluation-harness,
+      OHIF Viewers, cornerstone*, dcmjs, SimpleITK, synthea. The only apparent
+      first-party research repos (VoxTell, ssl_pretraining) are models, not SDKs.
+      NO SDKs pointer is emitted.

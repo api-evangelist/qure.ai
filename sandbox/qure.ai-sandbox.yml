@@ -1,0 +1,38 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.qure.ai/readme/api-reference/prerequisites
+published_sandbox: false
+environments:
+  - name: test
+    self_serve: false
+  - name: pre-production
+    self_serve: false
+  - name: production
+    self_serve: false
+separation:
+  style: per-environment credentials
+  note: >-
+    "The Base URL, Token, and Source are different for the test, pre-production
+    and production environments." There is no key PREFIX convention (no
+    test_/live_ style marker) — the environment is determined entirely by which
+    Base URL you were given, so a client cannot tell from the credential alone
+    which environment it is pointed at.
+  docs: https://docs.qure.ai/readme/api-reference/prerequisites
+integration_parity:
+  note: >-
+    "Integration specifics will be the same in both environments" (pre-production
+    and production), per the Platform API overview.
+  source: https://documentation.qure.ai/api/platform-api/overview
+test_values: []
+test_clocks: false
+fixture_tooling: false
+self_signup: false
+note: >-
+  Qure.ai publishes NO self-serve sandbox. There are genuinely separate test and
+  pre-production environments, but access to all three is gated: the Base URL,
+  Token and Source must be issued by support@qure.ai. No magic test identifiers,
+  sample DICOMs, hosted test tokens or fixture triggers are published. NO Sandbox
+  pointer is emitted, because a developer cannot reach a console or test
+  environment without a sales/support conversation. The token and source values
+  shown in the prerequisites documentation are illustrative format examples, not
+  working credentials, and are deliberately not reproduced here.

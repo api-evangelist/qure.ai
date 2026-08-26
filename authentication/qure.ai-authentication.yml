@@ -1,0 +1,16 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/qure.ai-platform-api-xray-ct-openapi.yml, openapi/qure.ai-platform-api-xray-v2-er-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: TokenAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  sources:
+  - openapi/qure.ai-platform-api-xray-ct-openapi.yml
+  - openapi/qure.ai-platform-api-xray-v2-er-openapi.yml

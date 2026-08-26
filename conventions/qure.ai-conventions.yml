@@ -1,0 +1,116 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.qure.ai/readme/api-reference/authentication-and-headers
+derived_from:
+  - openapi/qure.ai-platform-api-xray-ct-openapi.yml
+  - openapi/qure.ai-platform-api-xray-v2-er-openapi.yml
+authentication:
+  style: static token in Authorization header
+  header: Authorization
+  format: "Token <YOUR_TOKEN>"
+  scheme_name: TokenAuth
+  spec_type: apiKey (in header)
+  note: >-
+    Despite living in the Authorization header this is not OAuth/Bearer — the
+    literal prefix is `Token`. Credentials (Base URL, Token, Source) differ per
+    environment (test, pre-production, production) and are issued by
+    support@qure.ai. See authentication/qure.ai-authentication.yml.
+  docs: https://docs.qure.ai/readme/api-reference/authentication-and-headers
+required_headers:
+  - name: Authorization
+    required: true
+    purpose: Bearer-style static token authentication.
+  - name: Source
+    required: true
+    purpose: >-
+      Tenant/user identification. A distinct workspace identifier, e.g.
+      `personal-user-<opaque>`. A wrong or missing Source yields 403, as does
+      requesting a DICOM outside your workspace.
+  - name: Content-Type
+    required: true
+    on: requests with a body (POST/PUT/PATCH)
+    values: [application/dicom, multipart/form-data, multipart/related]
+  - name: User-Agent
+    required: true
+    purpose: >-
+      Client software identification. The docs explicitly warn that omitting it
+      can cause errors — unusual, and worth honoring in any client.
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    No idempotency key is documented and none appears in either OpenAPI document.
+    The nearest thing is GET /compute/{SeriesInstanceUID}, which returns 304 when
+    the series has already been pushed for computation — a de-facto guard against
+    double-invoking compute, but not a general idempotency contract and not
+    available on the POST /studies upload path. NO Idempotency pointer is emitted.
+pagination:
+  supported: na
+  note: >-
+    No collection endpoints exist. All five operations address a single resource
+    by DICOM UID, so there is nothing to page through.
+filtering_and_expansion:
+  supported: false
+  note: No sparse-fieldset, expansion or query-parameter filtering in either spec.
+metadata:
+  supported: false
+  note: >-
+    No arbitrary key/value metadata surface. Contextual data travels inside the
+    DICOM headers themselves rather than as API fields.
+request_tracing:
+  request_id_header: null
+  note: No request-id or correlation-id header documented. Correlation is by DICOM UID.
+versioning:
+  style: per-operation path segment
+  current: '3.1.33'
+  note: >-
+    /results/v2/{SOPInstanceUID} is the only versioned path. See
+    lifecycle/qure.ai-lifecycle.yml.
+error_envelope:
+  format: bespoke-json
+  fields: [success, message]
+  problem_json: false
+  note: >-
+    `success` is documented by the provider as deprecated and always true when
+    present. Branch on the HTTP status code, not the body. See
+    errors/qure.ai-problem-types.yml.
+rate_limit_signaling:
+  headers: []
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After headers documented, and no 429
+    response is declared in either spec. See rate-limits/qure.ai-rate-limits.yml.
+async_pattern:
+  style: submit-then-poll
+  note: >-
+    Inference is asynchronous. Upload DICOMs (POST /studies or POST /upload), for
+    CT additionally invoke GET /compute/{SeriesInstanceUID}, then poll the results
+    endpoint, which returns 202 while processing is still underway and 200 once
+    the result is ready. 409 means the series was never invoked for computation.
+    No webhook or callback surface is published, so polling is the only mechanism.
+reversibility:
+  grade: na
+  reversal_operations: []
+  window: null
+  note: >-
+    The API has no user-reversible write surface. The single write operation is
+    POST /studies (equivalently POST /upload), which ingests DICOM images for
+    inference; GET /compute triggers processing. There is no delete, cancel,
+    void, undo, purge or restore operation in either published OpenAPI document,
+    and the documentation states no retention or deletion window. An agent that
+    uploads a study cannot take that upload back through the API. This is
+    recorded as `na` rather than a failure because no reversal path is offered
+    to reverse — but it is a genuine gap worth raising with the provider, since
+    the uploaded payload is patient imaging data.
+  caveat: >-
+    NOT a claim that uploads are irreversible as a matter of policy — only that
+    no reversal operation or window is published. Deletion may well be available
+    out of band via support@qure.ai; the docs do not say.
+dry_run_mode:
+  supported: false
+  note: No dry-run, simulate or validate-only mode documented.
+cross_links:
+  errors: errors/qure.ai-problem-types.yml
+  lifecycle: lifecycle/qure.ai-lifecycle.yml
+  authentication: authentication/qure.ai-authentication.yml
+  rate_limits: rate-limits/qure.ai-rate-limits.yml
+  conformance: conformance/qure.ai-conformance.yml

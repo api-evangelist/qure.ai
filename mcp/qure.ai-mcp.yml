@@ -1,0 +1,70 @@
+generated: '2026-08-26'
+method: derived
+status: candidate
+source: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml, openapi/qure.ai-platform-api-xray-ct-openapi.yml
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+search_evidence:
+  - what: hosted remote MCP endpoint
+    probe: https://mcp.qure.ai/
+    status: 404
+  - what: MCP server named in the documentation
+    probe: https://docs.qure.ai/llms.txt
+    status: 200
+    result: no MCP surface listed
+  - what: MCP package on npm or PyPI
+    probe: "registry.npmjs.org and pypi.org for qure / qure-ai / @qure/*"
+    status: 404
+    result: none published
+  - what: web search for a Qure.ai MCP server
+    result: no first-party Qure.ai MCP server found
+note: >-
+  Qure.ai ships NO MCP server — neither a hosted remote endpoint nor a local
+  stdio package. `deployment.mode: none` records that, and the tools below are a
+  DERIVED CANDIDATE list generated from the five real operations in the two
+  published OpenAPI documents. They are a proposal for what a Qure.ai MCP server
+  could expose, not something an agent can call today. No endpoint URL is
+  invented. Because there is no MCP server and no GraphQL surface, no tool
+  crosswalk is emitted.
+tools:
+  - name: upload_dicoms
+    description: >-
+      Upload one or more DICOM files for AI analysis as multipart form fields.
+    source_operation: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml#uploadDicoms
+    rest: POST /studies
+    write: true
+  - name: initiate_computation
+    description: >-
+      Trigger inference for an uploaded CT series. Required for qER and qCT
+      before results can be fetched. Returns 304 if already queued.
+    source_operation: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml#initiateComputation
+    rest: GET /compute/{SeriesInstanceUID}
+    write: true
+  - name: fetch_xray_results
+    description: >-
+      Fetch qXR/qMSK results for a chest or MSK X-ray by SOPInstanceUID. Returns
+      triage_status (Critical|Routine), a narrative report and generated SC/SR
+      assets. 202 while still processing.
+    source_operation: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml#fetchResultsv2XRay
+    rest: GET /results/v2/{SOPInstanceUID}
+    write: false
+  - name: fetch_head_ct_results
+    description: Fetch qER head-CT triage results for a series by SeriesInstanceUID.
+    source_operation: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml#fetchResultsqER
+    rest: GET /results/{SeriesInstanceUID}
+    write: false
+  - name: fetch_chest_ct_results
+    description: Fetch qCT chest-CT results for a series by SeriesInstanceUID.
+    source_operation: openapi/qure.ai-platform-api-xray-ct-openapi.yml#fetchResultsqCT
+    rest: GET /results/{SeriesInstanceUID}
+    write: false
+agent_safety_note: >-
+  Every tool above touches patient imaging data and produces clinical triage
+  output. No reversal operation exists (see conventions/ reversibility), so an
+  upload cannot be undone through the API. Any real MCP server over this contract
+  should gate upload_dicoms behind explicit human authorization.

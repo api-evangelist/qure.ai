@@ -1,0 +1,78 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Qure.ai Platform API (X-ray v2 / qER)
+  version: 1.0.0
+extends: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml
+x-generated: '2026-08-26'
+x-method: generated
+x-source: >-
+  Derived from the provider's own published documentation at docs.qure.ai. Adds
+  no facts the provider does not state; annotates the harvested spec so agents
+  can read what the docs say in prose.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-slug: qure.ai
+      x-apievangelist-harvested: '2026-08-26'
+      x-apievangelist-source: https://docs.qure.ai/readme/api-reference
+      x-regulatory-class: medical-device-software
+      x-domain-standard: DICOM
+  - target: $.servers[0]
+    update:
+      x-templated: true
+      x-provisioning: >-
+        BASE_URL is issued per customer per environment by support@qure.ai. It is
+        not a public host and cannot be discovered.
+  - target: $.paths['/studies'].post
+    update:
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        reversible: false
+        reversal-operation: null
+        audit: required
+        note: >-
+          Ingests patient imaging data. No delete, cancel or purge operation is
+          published, so this upload cannot be withdrawn through the API.
+  - target: $.paths['/compute/{SeriesInstanceUID}'].get
+    update:
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        audit: required
+      x-idempotency-note: >-
+        Returns 304 when the series has already been pushed for computation, so a
+        repeat call does not double-queue. This is operation-local behavior, not a
+        general idempotency-key contract.
+  - target: $.paths['/results/v2/{SOPInstanceUID}'].get
+    update:
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+      x-polling:
+        pattern: submit-then-poll
+        in-progress-status: 202
+        terminal-statuses: [200, 206, 400, 403, 404]
+        retry-after-header: false
+        note: >-
+          No Retry-After and no rate-limit headers are published; the client
+          chooses its own backoff.
+      x-clinical-safety: >-
+        triage_status is a prioritization signal from a regulated device, not a
+        diagnosis. A Critical result must escalate to a clinician.
+  - target: $.paths['/results/{SOPInstanceUID}'].get
+    update:
+      deprecated: true
+      x-deprecation-note: >-
+        Marked DEPRECATED in the provider's own summary and page title. Superseded
+        by fetchResultsv2XRay at /results/v2/{SOPInstanceUID}. No sunset date is
+        published.
+      x-superseded-by: fetchResultsv2XRay
+  - target: $.paths['/results/{SeriesInstanceUID}'].get
+    update:
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+      x-precondition: >-
+        Requires GET /compute/{SeriesInstanceUID} first. A 409 means the series
+        was never invoked for computation.

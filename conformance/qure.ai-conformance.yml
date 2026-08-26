@@ -1,0 +1,102 @@
+generated: '2026-08-26'
+method: searched
+source: https://www.qure.ai/regulatory-and-privacy
+docs: https://docs.qure.ai/readme/api-reference
+standards:
+  - id: openapi-3.0.3
+    conforms: true
+    evidence: >-
+      Provider publishes two OpenAPI 3.0.3 documents (Platform_API_1.yaml,
+      Platform_API_2.yaml) embedded in the GitBook API reference.
+  - id: dicom
+    conforms: true
+    evidence: >-
+      DOMAIN STANDARD. The entire contract is DICOM-native: POST /studies accepts
+      application/dicom payloads, and every read operation is keyed on a DICOM
+      identifier (SOPInstanceUID for instances, SeriesInstanceUID for series).
+      Dedicated DICOM Specifications pages are published per product (qXR, qMSK,
+      qCT, qER). Outputs are returned as DICOM Secondary Capture (SC) and
+      Structured Report (SR) assets.
+    spec_location: >-
+      openapi/qure.ai-platform-api-xray-v2-er-openapi.yml#/paths/~1studies/post
+      (Content-Type application/dicom) and the SOPInstanceUID / SeriesInstanceUID
+      path parameters on every /results and /compute operation
+    docs: https://docs.qure.ai/readme/platform-api-guides/for-x-rays-qxr-and-qmsk/dicom-specifications
+  - id: iso-13485-2016
+    conforms: true
+    evidence: MDSAP certification against ISO 13485:2016, issued via TUV SUD.
+    source: https://www.qure.ai/regulatory-and-privacy
+  - id: iec-62304
+    conforms: true
+    evidence: Medical device software lifecycle process compliance claimed for software development.
+    source: https://www.qure.ai/regulatory-and-privacy
+  - id: iso-iec-27001
+    conforms: true
+    evidence: ISO/IEC 27001 certified information security management system.
+    source: https://www.qure.ai/regulatory-and-privacy
+  - id: hipaa
+    conforms: true
+    evidence: HIPAA compliance claimed for handling of Protected Health Information.
+    source: https://www.qure.ai/regulatory-and-privacy
+  - id: gdpr
+    conforms: true
+    evidence: EU-GDPR compliance with annual third-party audits.
+    source: https://www.qure.ai/regulatory-and-privacy
+  - id: eu-mdr-mdd-ce
+    conforms: true
+    evidence: >-
+      CE marked Class IIa under EU MDD (qXR v3.1, qER v2.0) and Class IIb under
+      EU MDR (qXR v4.0, qER-NCCT, qCT, qMSK).
+    source: https://www.qure.ai/regulatory-and-privacy
+  - id: us-fda-510k
+    conforms: true
+    evidence: >-
+      510(k) clearances for qXR-LN, qER (V2.0), qER-Quant, qCT-Quant, qXR-BT,
+      qXR-PTX-PE and qXR-CTR.
+    source: https://www.qure.ai/regulatory-and-privacy
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      Auth is a static bearer-style token in the Authorization header
+      (`Authorization: Token <token>`), not OAuth 2.0. No oauth2 securityScheme
+      in either spec and no OAuth documentation.
+  - id: openid-connect
+    conforms: false
+    evidence: No /.well-known/openid-configuration on any host (all 404).
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors are returned as a bespoke JSON envelope (`success`, `message`), not
+      application/problem+json.
+  - id: fhir-r4
+    conforms: false
+    evidence: >-
+      No FHIR resources in either spec. Interop is DICOM-based (SC/SR assets),
+      not FHIR ImagingStudy/DiagnosticReport.
+  - id: hl7v2
+    conforms: false
+    evidence: Not declared in the published contract or the API documentation.
+  - id: pagination
+    conforms: false
+    evidence: >-
+      No collection endpoints. All five operations are single-resource by DICOM
+      UID, so there is nothing to paginate.
+  - id: idempotency
+    conforms: false
+    evidence: >-
+      No idempotency key header documented or present in either spec. See
+      conventions/qure.ai-conventions.yml.
+compliance_program:
+  published: true
+  url: https://www.qure.ai/regulatory-and-privacy
+  certifications:
+    - ISO/IEC 27001
+    - ISO 13485:2016 (MDSAP, TUV SUD)
+    - IEC 62304
+    - HIPAA
+    - EU GDPR
+    - CE (EU MDR / MDD)
+    - US FDA 510(k)
+  contacts:
+    - DPO@qure.ai
+    - partner@qure.ai

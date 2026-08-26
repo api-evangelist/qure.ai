@@ -1,0 +1,130 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml, openapi/qure.ai-platform-api-xray-ct-openapi.yml
+note: >-
+  Neither published spec defines components.schemas — every response body is an
+  inline schema. The entity graph below is derived from those inline shapes and
+  from the DICOM identifiers used as path parameters. Identity in this API is
+  DICOM identity: there are no Qure-issued resource ids.
+identifier_scheme:
+  standard: DICOM
+  identifiers:
+    - name: SOPInstanceUID
+      grain: a single image instance (one X-ray)
+      used_by: [fetchResultsXRay, fetchResultsv2XRay]
+    - name: SeriesInstanceUID
+      grain: a series of instances (a CT series, or an X-ray series)
+      used_by: [initiateComputation, fetchResultsqCT, fetchResultsqER]
+  note: >-
+    No Qure-prefixed ids. A consumer must read UIDs out of the DICOM file itself
+    (the docs demonstrate pydicom) before it can address anything.
+entities:
+  - name: Study
+    description: A DICOM upload unit. Created by POST /studies (or POST /upload).
+    created_by: uploadDicoms
+    relationships:
+      - type: has_many
+        target: Instance
+        via: multipart file_N form fields
+  - name: Series
+    description: A set of DICOM instances sharing a SeriesInstanceUID.
+    key: SeriesInstanceUID
+    relationships:
+      - type: has_many
+        target: Instance
+        via: SOPInstanceUID
+      - type: has_one
+        target: Computation
+        via: SeriesInstanceUID
+      - type: has_one
+        target: Result
+        via: SeriesInstanceUID
+  - name: Instance
+    description: A single DICOM image.
+    key: SOPInstanceUID
+    relationships:
+      - type: belongs_to
+        target: Series
+        via: SeriesInstanceUID
+      - type: has_one
+        target: Result
+        via: SOPInstanceUID
+  - name: Computation
+    description: >-
+      An inference job over a series, invoked for CT products via
+      GET /compute/{SeriesInstanceUID}. Returns 304 if already queued.
+    key: SeriesInstanceUID
+    relationships:
+      - type: belongs_to
+        target: Series
+        via: SeriesInstanceUID
+  - name: Result
+    description: The AI output for an instance or series.
+    fields:
+      - name: success
+        type: boolean
+        note: Deprecated per provider; always true when present.
+      - name: message
+        type: string
+      - name: triage_status
+        type: string
+        enum: [Critical, Routine]
+        note: >-
+          The single most decision-relevant field. Routine means the AI detected
+          no abnormality; Critical means it did.
+      - name: result
+        type: object
+    relationships:
+      - type: has_one
+        target: Report
+        via: result.report
+      - type: has_many
+        target: Asset
+        via: result.files
+  - name: Report
+    description: The human-readable radiology narrative generated from the model output.
+    fields:
+      - name: findings
+        type: string
+        note: Free-text description of the AI results.
+      - name: impression
+        type: string
+        note: Single-line summary, e.g. "Abnormal study".
+      - name: findings_list
+        type: array
+        note: >-
+          Array of two-element arrays pairing a report_key (a stable identifier
+          for a specific finding) with its findings_text.
+    relationships:
+      - type: belongs_to
+        target: Result
+        via: result.report
+  - name: Asset
+    description: >-
+      Generated DICOM artifacts returned alongside the result — Secondary Capture
+      (SC) overlays and Structured Reports (SR). Returned even on a 206, where
+      they explicitly state the DICOM is invalid, so the response shape stays
+      consistent with normal processing.
+    relationships:
+      - type: belongs_to
+        target: Result
+        via: result.files
+products:
+  - id: qXR
+    modality: chest X-ray
+    results_operation: fetchResultsv2XRay
+    grain: SOPInstanceUID
+  - id: qMSK
+    modality: musculoskeletal X-ray
+    results_operation: fetchResultsv2XRay
+    grain: SOPInstanceUID
+  - id: qER
+    modality: head CT
+    results_operation: fetchResultsqER
+    grain: SeriesInstanceUID
+    requires_compute: true
+  - id: qCT
+    modality: chest CT
+    results_operation: fetchResultsqCT
+    grain: SeriesInstanceUID
+    requires_compute: true

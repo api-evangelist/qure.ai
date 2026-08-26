@@ -1,0 +1,65 @@
+generated: '2026-08-26'
+method: searched
+source: https://documentation.qure.ai/release-notes
+scheme: semver
+note: >-
+  Qure.ai publishes dated release notes for two shipped components — the Qure.ai
+  App and the on-premises Gateway. There is NO dated changelog for the Platform
+  API itself; API changes are documented only as a one-off migration guide
+  (Legacy to Platform). Recent window captured below.
+streams:
+  - product: Gateway
+    url: https://documentation.qure.ai/release-notes/gateway
+    current_version: 1.0.22
+    entries:
+      - version: 1.0.22
+        date: '2025-04-17'
+        breaking: false
+        additions:
+          - Gateway log file retention raised from 1 MB to a configurable 10 MB default.
+          - Support for connecting to an external PostgreSQL instance.
+          - Automatic detection and restart of a terminated shared PostgreSQL instance.
+      - version: 1.0.21
+        date: '2024-10-18'
+        breaking: false
+        additions:
+          - Configurable storage location for DICOM files (previously fixed to the C drive).
+          - Metadata field swap/append configuration for DICOM files when used with the Qure App.
+          - Active-page highlight in the Gateway UI.
+        fixes:
+          - Status page no longer errors when a DICOM is uploaded without Modality metadata.
+          - Filewatcher no longer stops on non-DICOM files; only valid DICOM headers are uploaded.
+      - version: 1.0.20
+        date: '2024-08-09'
+        breaking: false
+        additions:
+          - Qure Support contact details surfaced in the product.
+  - product: Qure.ai App
+    url: https://documentation.qure.ai/release-notes/qure.ai-app
+    current_version: 3.1.6
+    entries:
+      - version: 3.1.6
+        date: '2023-05-08'
+        breaking: false
+        additions:
+          - Automatic Routing and User Groups Management settings for the mobile application.
+        fixes:
+          - Mixed positive/negative results when filtering by tag.
+          - Media attachments not viewable in forms.
+          - Form summary not auto-updating in the patient channel.
+      - version: 3.1.4
+        date: '2023-04-10'
+        breaking: false
+        additions:
+          - Add Patient option to create a patient record before the scan.
+          - Workspace Management settings.
+          - Emergency Activation button to alert team members of critical cases.
+          - Merge Patients to consolidate duplicate records.
+          - Full-width worklist dashboard with saved filters and per-filter patient counts.
+      - version: 3.1.2
+        date: '2023-02-17'
+        breaking: false
+        additions:
+          - User and user-group search for sharing patient files.
+          - Worklist filters by date, source site, scan status, demographics and AI findings.
+          - Named saved filters; light/dark mode toggle.

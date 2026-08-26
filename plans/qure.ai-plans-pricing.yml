@@ -1,0 +1,21 @@
+generated: '2026-08-26'
+method: searched
+source: https://www.qure.ai/
+plan_count: 0
+plans: []
+model: enterprise-contact-sales
+note: >-
+  Qure.ai publishes no pricing page and no self-serve plans. https://www.qure.ai/pricing
+  returns 404 and no pricing link appears in the site navigation. Access to the
+  Platform API is a partner/enterprise arrangement — the prerequisites page states
+  that the Base URL, Token and Source must all be obtained by contacting
+  support@qure.ai. As a regulated medical-device software vendor selling to
+  hospitals, health systems and life-sciences partners, commercial terms are
+  negotiated rather than listed. plan_count 0 is a recorded fact, not a gap in
+  our search.
+evidence:
+  - url: https://www.qure.ai/pricing
+    status: 404
+  - url: https://docs.qure.ai/readme/api-reference/prerequisites
+    status: 200
+    detail: "States: 'To obtain the Base URL, Source, and Token, please reach out to our support team at support@qure.ai.'"

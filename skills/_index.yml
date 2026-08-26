@@ -1,0 +1,16 @@
+generated: '2026-08-26'
+method: generated
+source: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml, openapi/qure.ai-platform-api-xray-ct-openapi.yml
+note: >-
+  Generated from the two published Qure.ai OpenAPI documents. Every operationId
+  referenced was verified verbatim against the specs. Qure.ai publishes no
+  first-party AGENTS.md or agent skills of its own.
+skills:
+  - name: qure-chest-xray-triage
+    file: qure.ai-chest-xray-triage.md
+    summary: Upload a chest/MSK X-ray DICOM and retrieve the qXR/qMSK triage result.
+    operations: [uploadDicoms, fetchResultsv2XRay]
+  - name: qure-head-ct-triage
+    file: qure.ai-head-ct-triage.md
+    summary: Upload a head CT series, invoke computation, and retrieve qER triage results.
+    operations: [uploadDicoms, initiateComputation, fetchResultsqER]

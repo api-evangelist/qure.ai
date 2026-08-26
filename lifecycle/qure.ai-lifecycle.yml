@@ -1,0 +1,64 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.qure.ai/readme/migrate-to-platform-apis
+versioning:
+  scheme: uri-path-per-operation
+  current: '3.1.33'
+  note: >-
+    info.version in both published OpenAPI documents is 3.1.33. Versioning is not
+    applied uniformly at the base path; instead a single operation carries the
+    version segment — /results/v2/{SOPInstanceUID} supersedes the unversioned
+    /results/{SOPInstanceUID} for X-rays. There is no Accept-header or
+    date-pinned version train.
+  docs: https://docs.qure.ai/readme/migrate-to-platform-apis/whats-changed/api-changes
+generations:
+  - name: Legacy API
+    status: superseded
+    endpoints:
+      - POST /studies
+      - GET /results/{SOPInstanceUID}
+    migration_guide: https://docs.qure.ai/readme/migrate-to-platform-apis/platform-api-migration-guide
+  - name: Platform API
+    status: current
+    endpoints:
+      - POST /studies
+      - POST /upload
+      - GET /compute/{SeriesInstanceUID}
+      - GET /results/{SOPInstanceUID}
+      - GET /results/v2/{SOPInstanceUID}
+      - GET /results/{SeriesInstanceUID}
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: >-
+    No published deprecation policy and no RFC 8594 Sunset/Deprecation header
+    support found. Deprecation is communicated in prose only: the API reference
+    page is titled "[DEPRECATED] Fetch Results v1 (for X-Rays)" and the spec
+    summary reads "DEPRECATED - Fetch Results v1 (for X-Rays)". No sunset date
+    is stated anywhere, so a consumer cannot tell how long v1 will keep working.
+    NO Deprecation pointer is emitted — a labelled operation is not a policy.
+deprecated_operations:
+  - spec: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml
+    operationId: fetchResultsXRay
+    path: GET /results/{SOPInstanceUID}
+    marked_by: 'summary text only (no `deprecated: true` flag in the spec)'
+    superseded_by: fetchResultsv2XRay
+sla:
+  url: null
+  uptime_target: null
+  note: No published SLA or uptime target found on the site or in the docs.
+status_page:
+  url: https://status.qure.ai/
+  title: Qure.ai System Status
+  http_status: 200
+  note: >-
+    Served as a client-rendered single-page app; the document title confirms it
+    is a genuine first-party status page for Qure.ai.
+release_notes:
+  - product: Qure.ai App
+    url: https://documentation.qure.ai/release-notes/qure.ai-app
+  - product: Gateway
+    url: https://documentation.qure.ai/release-notes/gateway
+support:
+  email: support@qure.ai
+  note: Base URL, Token and Source are all issued by support@qure.ai on request.

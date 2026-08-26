@@ -1,0 +1,64 @@
+# Qure.ai Docs
+
+## Qure.ai Docs
+
+- [Platform API](https://docs.qure.ai/readme.md)
+- [Get Started](https://docs.qure.ai/readme/get-started.md)
+- [Quick Links](https://docs.qure.ai/readme/quick-links.md)
+- [Reading Platform API Documentation](https://docs.qure.ai/readme/reading-platform-api-documentation.md)
+- [How It Works](https://docs.qure.ai/readme/how-it-works.md)
+- [Platform API Fundamentals](https://docs.qure.ai/readme/platform-api-fundamentals.md)
+- [Platform API Guides](https://docs.qure.ai/readme/platform-api-guides.md)
+- [For X-Rays: qXR and qMSK](https://docs.qure.ai/readme/platform-api-guides/for-x-rays-qxr-and-qmsk.md)
+- [List of APIs](https://docs.qure.ai/readme/platform-api-guides/for-x-rays-qxr-and-qmsk/list-of-apis.md)
+- [DICOM Specifications](https://docs.qure.ai/readme/platform-api-guides/for-x-rays-qxr-and-qmsk/dicom-specifications.md)
+- [For qXR](https://docs.qure.ai/readme/platform-api-guides/for-x-rays-qxr-and-qmsk/dicom-specifications/for-qxr.md)
+- [For qMSK](https://docs.qure.ai/readme/platform-api-guides/for-x-rays-qxr-and-qmsk/dicom-specifications/for-qmsk.md)
+- [Get Started](https://docs.qure.ai/readme/platform-api-guides/for-x-rays-qxr-and-qmsk/get-started.md)
+- [Upload DICOMs](https://docs.qure.ai/readme/platform-api-guides/for-x-rays-qxr-and-qmsk/upload-dicoms.md)
+- [Fetch Results](https://docs.qure.ai/readme/platform-api-guides/for-x-rays-qxr-and-qmsk/fetch-results.md)
+- [For CTs : qER and qCT](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct.md)
+- [List of APIs](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/list-of-apis.md)
+- [DICOM Specifications](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/dicom-specifications.md)
+- [For qCT](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/dicom-specifications/for-qct.md)
+- [For qER](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/dicom-specifications/for-qer.md)
+- [Get Started](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/get-started.md)
+- [Upload DICOMs](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/upload-dicoms.md)
+- [Initiate Computation](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/initiate-computation.md)
+- [Fetch Results](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/fetch-results.md)
+- [For qCT](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/fetch-results/for-qct.md)
+- [For qER](https://docs.qure.ai/readme/platform-api-guides/for-cts-qer-and-qct/fetch-results/for-qer.md)
+- [Migrate to Platform APIs](https://docs.qure.ai/readme/migrate-to-platform-apis.md)
+- [What's Changed](https://docs.qure.ai/readme/migrate-to-platform-apis/whats-changed.md)
+- [API Changes](https://docs.qure.ai/readme/migrate-to-platform-apis/whats-changed/api-changes.md)
+- [Data Format Changes](https://docs.qure.ai/readme/migrate-to-platform-apis/whats-changed/data-format-changes.md)
+- [Platform API Migration Guide](https://docs.qure.ai/readme/migrate-to-platform-apis/platform-api-migration-guide.md)
+- [API Reference](https://docs.qure.ai/readme/api-reference.md)
+- [Prerequisites](https://docs.qure.ai/readme/api-reference/prerequisites.md)
+- [Authentication and Headers](https://docs.qure.ai/readme/api-reference/authentication-and-headers.md)
+- [Make Your First API Request](https://docs.qure.ai/readme/api-reference/make-your-first-api-request.md)
+- [Upload DICOMs](https://docs.qure.ai/readme/api-reference/upload-dicoms.md)
+- [Initiate Computation (for CTs)](https://docs.qure.ai/readme/api-reference/initiate-computation.md)
+- [Fetch Results v2 (for X-Rays)](https://docs.qure.ai/readme/api-reference/fetch-results.md)
+- [\[DEPRECATED\] Fetch Results v1 (for X-Rays)](https://docs.qure.ai/readme/api-reference/fetch-results-1.md)
+- [Fetch Results (for qCT)](https://docs.qure.ai/readme/api-reference/fetch-results-1-1.md)
+- [Fetch Results (for qER)](https://docs.qure.ai/readme/api-reference/fetch-results-2.md)
+- [Troubleshooting](https://docs.qure.ai/readme/troubleshooting.md)
+- [qXR](https://docs.qure.ai/readme/troubleshooting/qxr.md)
+- [Inconsistent Image Prediction](https://docs.qure.ai/readme/troubleshooting/qxr/inconsistent-image-prediction.md)
+
+
+---
+
+# Agent Instructions
+This documentation is published with GitBook. GitBook is the documentation platform designed so that both humans and AI agents can read, navigate, and reason over technical content effectively. Learn more at gitbook.com.
+
+## Querying This Documentation
+If you need additional information, you can query the documentation dynamically by asking a question.
+Perform an HTTP GET request on a page URL with the `ask` query parameter:
+```
+GET https://docs.qure.ai/readme.md?ask=<question>
+```
+The question should be specific, self-contained, and written in natural language.
+The response will contain a direct answer to the question and relevant excerpts and sources from the documentation.
+Use this mechanism when the answer is not explicitly present in the current page, you need clarification or additional context, or you want to retrieve related documentation sections.

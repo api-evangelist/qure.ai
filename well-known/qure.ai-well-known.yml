@@ -1,0 +1,87 @@
+generated: '2026-08-26'
+method: probed
+source: live probe of /.well-known/* across every Qure.ai host named in apis.yml
+hit_count: 0
+note: >-
+  Every /.well-known/ path 404s on www.qure.ai, docs.qure.ai, documentation.qure.ai
+  and app.qure.ai. status.qure.ai answers HTTP 200 to EVERY /.well-known/* path,
+  including a control path that cannot exist — it is a single-page-app catch-all
+  returning the same 469-byte HTML shell, not a served discovery surface. No
+  WellKnown or SecurityTxt pointer is emitted, because nothing here is a document.
+hosts:
+  - host: https://www.qure.ai
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://docs.qure.ai
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://documentation.qure.ai
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://app.qure.ai
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://status.qure.ai
+    catch_all: true
+    documents: []
+    note: >-
+      Returns 200 with a 469-byte SPA shell for every /.well-known/* path probed,
+      including the control path /.well-known/qure-nonexistent-probe. Treated as a
+      miss on all seven paths; no document was saved.
+soft_404_control:
+  url: https://status.qure.ai/.well-known/qure-nonexistent-probe
+  status: 200
+  bytes: 469
+  verdict: catch-all — 200 is not a hit on this host

@@ -1,18 +1,77 @@
 aid: qure.ai
 name: Qure.ai
-description: 'Qure.ai is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: Qure.ai is a healthcare artificial-intelligence company, founded in 2016 and headquartered in Mumbai,
+  India, that builds regulator-cleared deep-learning software for medical imaging. Its products read chest X-rays
+  (qXR), head and chest CT (qER, qCT), and musculoskeletal X-rays (qMSK) to detect, quantify and triage findings
+  such as tuberculosis, lung nodules, intracranial hemorrhage, midline shift, cranial fracture, pneumothorax and
+  pleural effusion, typically in under a minute. The company exposes these models to partners through the Qure Platform
+  API, a token-authenticated DICOM ingest and results-retrieval REST interface documented at docs.qure.ai, alongside
+  an on-premises Gateway deployment and the Qure.ai clinical app. Qure.ai holds multiple US FDA 510(k) clearances
+  and EU MDR/MDD CE certifications and reports deployment across more than 85 countries.
 url: https://raw.githubusercontent.com/api-evangelist/qure.ai/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment-pipeline
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
+- Artificial Intelligence
+- Healthcare
+- Medical Imaging
+- Radiology
+- Machine Learning
+- DICOM
+- Diagnostics
+- Clinical Decision Support
+- Health Technology
 - Company
-apis: []
+apis:
+- aid: qure.ai:platform-api
+  name: Qure.ai Platform API
+  description: The Qure Platform API is a token-authenticated REST interface that lets partners send DICOM medical
+    images to Qure.ai deep-learning models and retrieve AI triage results. Upload chest or musculoskeletal X-rays
+    and head or chest CT series to POST /studies (or POST /upload), invoke inference for CT series with GET /compute/{SeriesInstanceUID},
+    then poll GET /results/v2/{SOPInstanceUID} for qXR/qMSK or GET /results/{SeriesInstanceUID} for qER and qCT.
+    Responses carry a Critical/Routine triage status, a narrative findings report and generated DICOM Secondary
+    Capture and Structured Report assets. Identity is DICOM-native — SOPInstanceUID and SeriesInstanceUID are the
+    only resource keys.
+  humanURL: https://docs.qure.ai/readme/api-reference
+  baseURL: BASE_URL
+  tags:
+  - Medical Imaging
+  - DICOM
+  - Radiology
+  - Artificial Intelligence
+  - Diagnostics
+  - Healthcare
+  properties:
+  - type: OpenAPI
+    url: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml
+  - type: OpenAPI
+    url: openapi/qure.ai-platform-api-xray-ct-openapi.yml
+  - type: Overlay
+    url: overlays/qure.ai-platform-api-xray-v2-er-overlay.yaml
+  - type: Overlay
+    url: overlays/qure.ai-platform-api-xray-ct-overlay.yaml
+  - type: Documentation
+    url: https://docs.qure.ai/
+  - type: APIReference
+    url: https://docs.qure.ai/readme/api-reference
+  - type: GettingStarted
+    url: https://docs.qure.ai/readme/get-started
+  - type: ErrorCatalog
+    url: errors/qure.ai-problem-types.yml
+  - type: DataModel
+    url: data-model/qure.ai-data-model.yml
+  - type: MCPServerCandidate
+    url: mcp/qure.ai-mcp.yml
+  x-baseurl-note: 'The published OpenAPI servers[] entry is the literal template `BASE_URL`. This is not a missing
+    base URL we failed to find: the provider states in both the spec server description and the prerequisites page
+    that the Base URL is issued per customer and per environment (test, pre-production, production) by support@qure.ai.
+    There is no public API host. api.qure.ai does not resolve. Recorded as templated-and-correct rather than repaired
+    to a guess.'
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +79,78 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.hiive.com/securities/qure.ai-stock
+  url: https://www.qure.ai/
+- type: Documentation
+  url: https://docs.qure.ai/
+- type: APIReference
+  url: https://docs.qure.ai/readme/api-reference
+- type: GettingStarted
+  url: https://docs.qure.ai/readme/get-started
+- type: DeveloperPortal
+  url: https://documentation.qure.ai/
+- type: Support
+  url: https://www.qure.ai/contact-us
+- type: Blog
+  url: https://www.qure.ai/blog
+- type: GitHubOrganization
+  url: https://github.com/qureai
+- type: SignUp
+  url: https://app.qure.ai
+- type: TermsOfService
+  url: https://www.qure.ai/legal
+- type: PrivacyPolicy
+  url: https://www.qure.ai/privacy-policy
+- type: Compliance
+  url: https://www.qure.ai/regulatory-and-privacy
+- type: StatusPage
+  url: https://status.qure.ai/
+- type: ChangeLog
+  url: https://documentation.qure.ai/release-notes
+- type: ChangeLog
+  url: changelog/qure.ai-changelog.yml
+- type: Lifecycle
+  url: lifecycle/qure.ai-lifecycle.yml
+- type: Authentication
+  url: authentication/qure.ai-authentication.yml
+- type: Conventions
+  url: conventions/qure.ai-conventions.yml
+- type: Conformance
+  url: conformance/qure.ai-conformance.yml
+- type: ErrorCatalog
+  url: errors/qure.ai-problem-types.yml
+- type: DataModel
+  url: data-model/qure.ai-data-model.yml
+- type: DomainSecurity
+  url: security/qure.ai-domain-security.yml
+- type: Packages
+  url: packages/qure.ai-packages.yml
+- type: Plans
+  url: plans/qure.ai-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/qure.ai-rate-limits.yml
+- type: LLMsTxt
+  url: llms/qure.ai-llms.txt
+- type: MCPServerCandidate
+  url: mcp/qure.ai-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: WellKnownProbe
+  url: well-known/qure.ai-well-known.yml
+image: https://www.qure.ai/favicon.ico
+x-secondary-market-listing: https://www.hiive.com/securities/qure.ai-stock
+x-pointer-policy: 'Pointers deliberately WITHHELD, each because the underlying thing is genuinely absent: SDKs (no
+  first-party client library on any registry — see packages/); Idempotency (no idempotency key documented or in
+  either spec — see conventions/); Deprecation (an operation is labelled DEPRECATED in prose but no policy and no
+  sunset date are published — see lifecycle/); Security (no security.txt, disclosure page or bug-bounty program
+  found); TrustCenter (no trust.qure.ai and no trust portal); WellKnown / SecurityTxt (every /.well-known/ path
+  404s; status.qure.ai answers 200 to all of them including a control path and is a SPA catch-all); AgentCard (probed
+  on every host, no hit — nothing written, per pipeline rule); Sandbox (test and pre-production environments exist
+  but all credentials are issued by support@qure.ai; no self-serve console); AsyncAPI / Webhooks (no event, streaming
+  or callback surface — the API is submit-then-poll); MCPServer (the mcp/ artifact is a DERIVED CANDIDATE with deployment.mode:
+  none — Qure.ai ships no MCP server, so the pointer is typed MCPServerCandidate to keep it out of the scored MCP
+  checks); CLI, Components, Postman, Roadmap, Vocabulary, DeclineCodes, Protobuf, WSDL, GraphQL (none published).'
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 24
+  pass: local-v1
