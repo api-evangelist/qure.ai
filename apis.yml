@@ -28,33 +28,16 @@ tags:
 - Health Technology
 - Company
 apis:
-- aid: qure.ai:platform-api
-  name: Qure.ai Platform API
-  description: The Qure Platform API is a token-authenticated REST interface that lets partners send DICOM medical
-    images to Qure.ai deep-learning models and retrieve AI triage results. Upload chest or musculoskeletal X-rays
-    and head or chest CT series to POST /studies (or POST /upload), invoke inference for CT series with GET /compute/{SeriesInstanceUID},
-    then poll GET /results/v2/{SOPInstanceUID} for qXR/qMSK or GET /results/{SeriesInstanceUID} for qER and qCT.
-    Responses carry a Critical/Routine triage status, a narrative findings report and generated DICOM Secondary
-    Capture and Structured Report assets. Identity is DICOM-native — SOPInstanceUID and SeriesInstanceUID are the
-    only resource keys.
+- aid: qure.ai:qure.ai-fetch-results-api
+  name: Qure.ai Fetch Results API
+  description: The Fetch Results API from Qure.ai — 3 operation(s) for fetch results.
   humanURL: https://docs.qure.ai/readme/api-reference
   baseURL: BASE_URL
   tags:
-  - Medical Imaging
-  - DICOM
-  - Radiology
-  - Artificial Intelligence
-  - Diagnostics
-  - Healthcare
+  - Fetch Results
   properties:
   - type: OpenAPI
-    url: openapi/qure.ai-platform-api-xray-v2-er-openapi.yml
-  - type: OpenAPI
-    url: openapi/qure.ai-platform-api-xray-ct-openapi.yml
-  - type: Overlay
-    url: overlays/qure.ai-platform-api-xray-v2-er-overlay.yaml
-  - type: Overlay
-    url: overlays/qure.ai-platform-api-xray-ct-overlay.yaml
+    url: openapi/qure.ai-fetch-results-api-openapi.yml
   - type: Documentation
     url: https://docs.qure.ai/
   - type: APIReference
@@ -67,17 +50,60 @@ apis:
     url: data-model/qure.ai-data-model.yml
   - type: MCPServerCandidate
     url: mcp/qure.ai-mcp.yml
-  x-baseurl-note: 'The published OpenAPI servers[] entry is the literal template `BASE_URL`. This is not a missing
-    base URL we failed to find: the provider states in both the spec server description and the prerequisites page
-    that the Base URL is issued per customer and per environment (test, pre-production, production) by support@qure.ai.
-    There is no public API host. api.qure.ai does not resolve. Recorded as templated-and-correct rather than repaired
-    to a guess.'
+- aid: qure.ai:qure.ai-initiate-computation-api
+  name: Qure.ai Initiate Computation API
+  description: The Initiate Computation API from Qure.ai — 1 operation(s) for initiate computation.
+  humanURL: https://docs.qure.ai/readme/api-reference
+  baseURL: BASE_URL
+  tags:
+  - Initiate Computation
+  properties:
+  - type: OpenAPI
+    url: openapi/qure.ai-initiate-computation-api-openapi.yml
+  - type: Documentation
+    url: https://docs.qure.ai/
+  - type: APIReference
+    url: https://docs.qure.ai/readme/api-reference
+  - type: GettingStarted
+    url: https://docs.qure.ai/readme/get-started
+  - type: ErrorCatalog
+    url: errors/qure.ai-problem-types.yml
+  - type: DataModel
+    url: data-model/qure.ai-data-model.yml
+  - type: MCPServerCandidate
+    url: mcp/qure.ai-mcp.yml
+- aid: qure.ai:qure.ai-upload-dicoms-api
+  name: Qure.ai Upload DICOMs API
+  description: The Upload DICOMs API from Qure.ai — 1 operation(s) for upload dicoms.
+  humanURL: https://docs.qure.ai/readme/api-reference
+  baseURL: BASE_URL
+  tags:
+  - Upload DICOMs
+  properties:
+  - type: OpenAPI
+    url: openapi/qure.ai-upload-dicoms-api-openapi.yml
+  - type: Documentation
+    url: https://docs.qure.ai/
+  - type: APIReference
+    url: https://docs.qure.ai/readme/api-reference
+  - type: GettingStarted
+    url: https://docs.qure.ai/readme/get-started
+  - type: ErrorCatalog
+    url: errors/qure.ai-problem-types.yml
+  - type: DataModel
+    url: data-model/qure.ai-data-model.yml
+  - type: MCPServerCandidate
+    url: mcp/qure.ai-mcp.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/qure.ai-platform-api-xray-v2-er-overlay.yaml
+- type: Overlay
+  url: overlays/qure.ai-platform-api-xray-ct-overlay.yaml
 - type: Website
   url: https://www.qure.ai/
 - type: Documentation
