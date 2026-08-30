@@ -1,0 +1,178 @@
+openapi: 3.2.0
+info:
+  title: Qure.ai Upload DICOMs API
+  version: 3.1.33
+  description: 'Operations tagged Upload DICOMs across 2 of this provider''s published API definitions: qure.ai-platform-api-xray-ct-openapi.yml, qure.ai-platform-api-xray-v2-er-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: BASE_URL
+  description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
+security:
+- TokenAuth: []
+tags:
+- name: Upload DICOMs
+paths:
+  /studies:
+    post:
+      summary: Upload DICOMs.
+      operationId: uploadDicoms
+      tags:
+      - Upload DICOMs
+      requestBody:
+        required: true
+        description: Contains the DICOMs to be uploaded.
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file0:
+                  type: string
+                  format: binary
+                  description: The first DICOM file to be uploaded.
+                file1:
+                  type: string
+                  format: binary
+                  description: The second DICOM file to be uploaded.
+                file2:
+                  type: string
+                  format: binary
+                  description: The third DICOM file to be uploaded.
+      x-codeSamples:
+      - lang: cURL
+        label: cURL
+        source: 'curl -X POST \\
+
+          -L ''Base_URL/studies/'' \\
+
+          -H ''Content-Type: multipart/form-data'' \\
+
+          -H ''Authorization: Token <PASTE_YOUR_TOKEN>'' \\
+
+          -H ''Source: <PASTE_YOUR_SOURCE>'' \\
+
+          -F ''file_1=@"</path/to/your/dicom_file1.dcm>"'' \\
+
+          -F ''file_2=@"</path/to/your/dicom_file2.dcm>"'' \\
+
+          -F ''file_3=@"</path/to/your/dicom_file3.dcm>"''
+
+          '
+      - lang: Python
+        label: Python
+        source: "import requests\n\nurl = \"Base_URL/studies/\"\n\n# Prepare the files for upload. Assign each file a unique key.\nfiles = {\n    'file_0': ('<dicom_file1.dcm>', open('<path/to/dicom_file1.dcm>', 'rb'), 'application/dicom'),\n    'file_1': ('<dicom_file2.dcm>', open('<path/to/dicom_file2.dcm>', 'rb'), 'application/dicom'),\n    'file_2': ('<dicom_file3.dcm>', open('<path/to/dicom_file3.dcm>', 'rb'), 'application/dicom')\n}\n\n# Headers, including the Authorization token and Source\nheaders = {\n    'Authorization': 'Token <PASTE_YOUR_TOKEN>',\n    'Source': '<PASTE_YOUR_SOURCE>',\n    'Content-Type': 'multipart/form-data'\n}\n\n# Perform the POST request\nresponse = requests.post(url, headers=headers, files=files)\n\n# Print the response text\nprint(response.text)\n\n# Close the file handles after the request is done\nfor file in files.values():\n    file[1].close()\n"
+      responses:
+        '200':
+          description: DICOMS uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message that validates the upload request based on the response status code.
+                    example: Success
+                  status:
+                    type: string
+                    example: success
+                  messages:
+                    type: object
+                    description: Contains information about the uploaded files along with their metadata.
+                    properties:
+                      file0:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: DICOM registered successfully.
+                          created:
+                            type: boolean
+                          license_expired:
+                            type: boolean
+                          metadata:
+                            type: object
+                      file1:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: DICOM registered successfully.
+                          created:
+                            type: boolean
+                          license_expired:
+                            type: boolean
+                          metadata:
+                            type: object
+                      file2:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: DICOM registered successfully.
+                          created:
+                            type: boolean
+                          license_expired:
+                            type: boolean
+                          metadata:
+                            type: object
+                  series_instance_uids:
+                    type: array
+                    description: A list of SeriesInstanceUIDs present in the uploaded files.
+                    items:
+                      type: string
+                  detailed_info:
+                    description: An object that contains detailed information about the uploaded DICOMs.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        SeriesInstanceUID:
+                          type: string
+                          description: It is a unique identifier  given for a series of DICOM images.
+                        NumberOfSeriesRelatedInstances:
+                          type: number
+                          description: It is the number of series instance UIDs that belong to a set of series.
+        '400':
+          description: Use case not implemented or no DICOMs uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message that validates the upload request based on the response status code.
+                    example: Invalid token header. No credentials provided.
+                  next:
+                    type: string
+                    description: Inidcates the next step to resolve the issue.
+                    example: /accounts/login/
+                  authenticated:
+                    type: boolean
+                    description: Indicates the token validity.
+                    example: true
+        '401':
+          description: Invalid token header
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message that validates the upload request based on the response status code.
+                    example: No DICOM files were uploaded!
+    servers:
+    - url: BASE_URL
+      description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
+components:
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+x-refined-from:
+- qure.ai-platform-api-xray-ct-openapi.yml
+- qure.ai-platform-api-xray-v2-er-openapi.yml
+x-hideTryItPanel: true
+x-codeSamples: true

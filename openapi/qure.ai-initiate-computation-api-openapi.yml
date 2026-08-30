@@ -1,0 +1,140 @@
+openapi: 3.2.0
+info:
+  title: Qure.ai Initiate Computation API
+  version: 3.1.33
+  description: 'Operations tagged Initiate Computation across 2 of this provider''s published API definitions: qure.ai-platform-api-xray-ct-openapi.yml, qure.ai-platform-api-xray-v2-er-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: BASE_URL
+  description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
+security:
+- TokenAuth: []
+tags:
+- name: Initiate Computation
+paths:
+  /compute/{SeriesInstanceUID}:
+    get:
+      summary: Initiate Computation.
+      operationId: initiateComputation
+      tags:
+      - Initiate Computation
+      parameters:
+      - in: path
+        name: SeriesInstanceUID
+        required: true
+        schema:
+          type: string
+        description: The unique identifier for the series to initiate computation on.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recompute:
+                  type: boolean
+      x-codeSamples:
+      - lang: cURL
+        label: cURL
+        source: 'curl -X GET \\
+
+          -L ''Base_URL/compute/<SeriesInstanceUID>'' \\
+
+          -H ''Authorization: Token <PASTE_YOUR_TOKEN>'' \\
+
+          -H ''Source: <PASTE_YOUR_SOURCE>''
+
+          '
+      - lang: Python
+        label: Python
+        source: "import requests\nimport pydicom\n\n# To fetch SeriesInstanceUID using pydicom \n\nseries_instance_uid = pydicom.read_file('<path/to/your/dicom_file.dcm>').SeriesInstanceUID\n\nurl = f\"Base_URL/compute/{series_instance_uid}\"\n\n# Headers, including the Authorization token and Source\nheaders = {\n    'Authorization': 'Token <PASTE_YOUR_TOKEN>',\n    'Source': '<PASTE_YOUR_SOURCE>',\n}\n# Perform the GET request\nresponse = requests.get(url, headers=headers)\n\n# Print the response text\nprint(response.text)\n"
+      responses:
+        '200':
+          description: Computation initiated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: series_instance_uid successfully pushed for computation!
+                  success:
+                    type: boolean
+                    example: true
+        '304':
+          description: The DICOMS are already pushed for computation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: series_instance_uid was already pushed for computation!
+                  success:
+                    type: boolean
+                    example: true
+        '401':
+          description: The Authorization header has either no token or a wrong token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Invalid token header. No credentials provided.
+                  next:
+                    type: string
+                    description: Inidcates the next step to resolve the issue.
+                    example: /accounts/login/
+                  authenticated:
+                    type: boolean
+                    description: Indicates the token validity.
+                    example: false
+        '403':
+          description: The Source header is either no source or the wrong source.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Access denied!
+        '404':
+          description: The requested image or series could not be found, possibly because it has not been uploaded yet.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sucess:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the upload request based on the response status code.
+                    example: Resource with SeriesInstanceUID <SeriesInstanceUID> is not yet uploaded!
+    servers:
+    - url: BASE_URL
+      description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
+components:
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+x-refined-from:
+- qure.ai-platform-api-xray-ct-openapi.yml
+- qure.ai-platform-api-xray-v2-er-openapi.yml
+x-hideTryItPanel: true
+x-codeSamples: true

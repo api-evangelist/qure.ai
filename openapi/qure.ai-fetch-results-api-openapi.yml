@@ -1,0 +1,745 @@
+openapi: 3.2.0
+info:
+  title: Qure.ai Fetch Results API
+  version: 3.1.33
+  description: 'Operations tagged Fetch Results across 2 of this provider''s published API definitions: qure.ai-platform-api-xray-ct-openapi.yml, qure.ai-platform-api-xray-v2-er-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: BASE_URL
+  description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
+security:
+- TokenAuth: []
+tags:
+- name: Fetch Results
+paths:
+  /results/{SOPInstanceUID}:
+    get:
+      summary: Fetch Results(for X-Rays).
+      operationId: fetchResultsXRay
+      tags:
+      - Fetch Results
+      parameters:
+      - in: path
+        name: SOPInstanceUID
+        required: true
+        schema:
+          type: string
+        description: The unique identifier for a specific instance of a service object pair (SOP), such as a single x-ray, to fetch results for.
+      x-codeSamples:
+      - lang: cURL
+        label: cURL
+        source: 'curl -X GET \\
+
+          -L ''Base_URL/results/<SOPInstanceUID>'' \\
+
+          -H ''Authorization: Token <PASTE_YOUR_TOKEN>'' \\
+
+          -H ''Source: <PASTE_YOUR_SOURCE>''
+
+          '
+      - lang: Python
+        label: Python
+        source: "import requests\nimport pydicom\n\n# To fetch sopInstanceUID using pydicom \n\nsop_instance_uid = pydicom.read_file('<path/to/your/dicom_file.dcm>').SOPInstanceUID\n\nurl = f\"Base_URL/results/{sop_instance_uid}\"\n\n# Headers, including the Authorization token and Source\nheaders = {\n    'Authorization': 'Token <PASTE_YOUR_TOKEN>',\n    'Source': '<PASTE_YOUR_SOURCE>',\n}\n\n  # Perform the GET request\n  response = requests.get(url, headers=headers)\n\n  # Print the response text\n  print(response.text) \n"
+      responses:
+        '200':
+          description: Results fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Results retrieved successfully!
+                  triage_status:
+                    type: string
+                    description: Indicates the urgency of results. 'critical' for high priority needing immediate expert review, and 'routine' for standard priority also requiring expert supervision.
+                    example: critical
+                  result:
+                    type: object
+                    description: Contains the results for the uploaded DICOMs.
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          findings:
+                            type: string
+                            example: <findings_text>\\n\\n<additional_findings_text>\\n\\n<more_findings_text>
+                          impression:
+                            type: string
+                            example: Abnormal study
+                          findings_list:
+                            type: array
+                            description: An array of arrays, where each inner array consists of two elements - a report key and its related findings text. The report key is a unique identifier for a specific finding, and the findings text provides detailed information about that finding, including any additional notes or observations, separated by new lines for clarity.
+                            items:
+                              type: array
+                              items:
+                                report_key:
+                                  type: string
+                                  description: The report key, a unique identifier for the finding.
+                                  example: example_report_key
+                                findings_text:
+                                  type: string
+                                  description: The related findings text, detailing the observations associated with the report key.
+                                  example: 'example_findings_text
+
+
+                                    '
+                      files:
+                        type: object
+                        description: Contains the reports and their related asset URLs.
+                        properties:
+                          sc:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_full_png:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_thumbnail:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_dicom_thumbnail:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          original_thumbnail:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          original:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          report_pdf:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          report_dcm:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          report_sr:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                  usecase:
+                    type: string
+                    description: Describes the usecase.
+                    example: qxr
+        '202':
+          description: The request has been accepted for processing, but the processing is not complete. It's common when predictions or analysis are still underway.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Resource with sopInstanceUID <SOPInstanceUID> is under process. Please check back in some time.
+        '401':
+          description: The Authorization header has either no token or a wrong token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Invalid token header. No credentials provided.
+                  next:
+                    type: string
+                    description: Inidcates the next step to resolve the issue.
+                    example: /accounts/login/
+                  authenticated:
+                    type: boolean
+                    description: Indicates the token validity.
+                    example: false
+        '403':
+          description: The Source header is either no source or the wrong source.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Access denied!
+        '404':
+          description: The requested image or series could not be found, possibly because it has not been uploaded yet.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sucess:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Resource with SeriesInstanceUID <SeriesInstanceUID> is not yet uploaded!
+        '400':
+          description: Returned when there's an unsupported use case, such as uploading an unsupported modality.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Use case not implemented.
+                  seriesInstanceUID:
+                    type: string
+                    description: It is a unique identifier  given for a series of DICOM images.
+                    example: <series_instance_uid>
+                  accessionNumber:
+                    type: string
+                    example: <accession_number>
+                  debug_info:
+                    type: object
+                    properties:
+                      reason:
+                        type: string
+                        example: Validity not determined yet!
+                  result:
+                    type: object
+        '409':
+          description: Returned when the Series is not yet invoked for computation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Series with resource_uidseries_instance_uid has not yet been invoked for computation. You can invoke by doing a GET on base_url/compute/series_instance_uid.
+    servers:
+    - url: BASE_URL
+      description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
+  /results/{SeriesInstanceUID}:
+    get:
+      summary: Fetch Results(for qCT).
+      operationId: fetchResultsqCT
+      tags:
+      - Fetch Results
+      parameters:
+      - in: path
+        name: SeriesInstanceUID
+        required: true
+        schema:
+          type: string
+        description: The unique identifier for the series to fetch results for.
+      x-codeSamples:
+      - lang: cURL
+        label: cURL
+        source: 'curl -X GET \\
+
+          -L ''Base_URL/results/<SeriesInstanceUID>'' \\
+
+          -H ''Authorization: Token <PASTE_YOUR_TOKEN>'' \\
+
+          -H ''Source: <PASTE_YOUR_SOURCE>''
+
+          '
+      - lang: Python
+        label: Python
+        source: "import requests\nimport pydicom\n\n# To fetch SeriesInstanceUID using pydicom \n\nseries_instance_uid = pydicom.read_file('<path/to/your/dicom_file.dcm>').SeriesInstanceUID\n\nurl = f\"Base_URL/results/{series_instance_uid}\"\n\n# Headers, including the Authorization token and Source\nheaders = {\n    'Authorization': 'Token <PASTE_YOUR_TOKEN>',\n    'Source': '<PASTE_YOUR_SOURCE>',\n}\n\n  # Perform the GET request\n  response = requests.get(url, headers=headers)\n\n  # Print the response text\n  print(response.text) \n"
+      responses:
+        '200':
+          description: Results fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                description: For qCT
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Results retrieved successfully!
+                  triage_status:
+                    type: string
+                    description: Indicates the urgency of results.'Critical' for high priority needing immediate expert review, and 'Routine' for standard priority also requiring expert supervision.
+                    example: critical
+                  result:
+                    type: object
+                    description: Contains the results for the uploaded DICOMs.
+                    properties:
+                      files:
+                        type: object
+                        description: Contains the reports and their related asset URLs.
+                        properties:
+                          sc:
+                            type: array
+                            description: Contains the URLs of secondary captures.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          pdf:
+                            type: array
+                            description: Contains the URL of the PDF report.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sr:
+                            type: array
+                            description: Contains the URL of the structured report.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_key_slices:
+                            type: array
+                            description: Contains the URLs of the CT slices where a nodule is identified.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          seg:
+                            type: array
+                            description: Contains the URL of the segmentation masks.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          gsps:
+                            type: array
+                            description: Contains the URL of the GSPS report.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          json:
+                            type: array
+                            description: Contains the URL of the json.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          pr:
+                            type: array
+                            description: Contains the URL of the progression reports if previous studies were available.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          hl7:
+                            type: array
+                            description: Contains the URL of the HL7 report.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          encapsulated_pdf:
+                            type: array
+                            description: Contains the URL of the encapsulated PDF report.
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                  usecase:
+                    type: string
+                    description: Describes the usecase.
+                    example: qct
+        '202':
+          description: The request has been accepted for processing, but the processing is not complete. It's common when predictions or analysis are still underway.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Resource with sopInstanceUID <SOPInstanceUID> is under process. Please check back in some time.
+        '401':
+          description: The Authorization header has either no token or a wrong token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Invalid token header. No credentials provided.
+                  next:
+                    type: string
+                    description: Inidcates the next step to resolve the issue.
+                    example: /accounts/login/
+                  authenticated:
+                    type: boolean
+                    description: Indicates the token validity.
+                    example: false
+        '403':
+          description: The Source header is either no source or the wrong source.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Access denied!
+        '404':
+          description: The requested image or series could not be found, possibly because it has not been uploaded yet.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sucess:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Resource with SeriesInstanceUID <SeriesInstanceUID> is not yet uploaded!
+        '400':
+          description: Returned when there's an unsupported use case, such as uploading an unsupported modality.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: Use case not implemented.
+                  seriesInstanceUID:
+                    type: string
+                    description: It is a unique identifier  given for a series of DICOM images.
+                    example: <series_instance_uid>
+                  accessionNumber:
+                    type: string
+                    example: <accession_number>
+                  debug_info:
+                    type: object
+                    properties:
+                      reason:
+                        type: string
+                        example: Validity not determined yet!
+                  result:
+                    type: object
+        '409':
+          description: Returned when the Series is not yet invoked for computation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Series with resource_uidseries_instance_uid has not yet been invoked for computation. You can invoke by doing a GET on base_url/compute/series_instance_uid.
+    servers:
+    - url: BASE_URL
+      description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
+  /results/v2/{SOPInstanceUID}:
+    get:
+      summary: Fetch Results v2 (for X-Rays).
+      operationId: fetchResultsv2XRay
+      tags:
+      - Fetch Results
+      parameters:
+      - in: path
+        name: SOPInstanceUID
+        required: true
+        schema:
+          type: string
+        description: The unique identifier for a specific instance of a service object pair (SOP), such as a single x-ray, to fetch results for.
+      x-codeSamples:
+      - lang: cURL
+        label: cURL
+        source: 'curl -X GET \\
+
+          -L ''Base_URL/results/v2/<SOPInstanceUID>'' \\
+
+          -H ''Authorization: Token <PASTE_YOUR_TOKEN>'' \\
+
+          -H ''Source: <PASTE_YOUR_SOURCE>''
+
+          '
+      - lang: Python
+        label: Python
+        source: "import requests\nimport pydicom\n\n# To fetch sopInstanceUID using pydicom \n\nsop_instance_uid = pydicom.read_file('<path/to/your/dicom_file.dcm>').SOPInstanceUID\n\nurl = f\"Base_URL/results/v2/{sop_instance_uid}\"\n\n# Headers, including the Authorization token and Source\nheaders = {\n    'Authorization': 'Token <PASTE_YOUR_TOKEN>',\n    'Source': '<PASTE_YOUR_SOURCE>',\n}\n\n  # Perform the GET request\n  response = requests.get(url, headers=headers)\n\n  # Print the response text\n  print(response.text) \n"
+      responses:
+        '200':
+          description: Results fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Deprecated and shouldn't be used for anything. This is always true generally when present. Maintained for backwards compatibility.
+                    example: true
+                  message:
+                    type: string
+                    description: A human readable message that validates the request based on the response status code.
+                    example: Results retrieved successfully!
+                  triage_status:
+                    type: string
+                    description: An Enum indicating the urgency of results. Either one of `Critical` or `Routine`, where `Routine` indicates that the AI detected no abnormality in the scan, and `Critical` indicates that the AI has detected an abnormality.
+                    example: Critical
+                  result:
+                    type: object
+                    description: Contains the results for the uploaded DICOMs.
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          findings:
+                            type: string
+                            description: A free text report describing the AI results.
+                            example: <findings_text>\\n\\n<additional_findings_text>\\n\\n<more_findings_text>
+                          impression:
+                            type: string
+                            description: Generally used as a single summary.
+                            example: Abnormal study
+                          findings_list:
+                            type: array
+                            description: An array of arrays, where each inner array consists of two elements - a report key and its related findings text. The report key is a unique identifier for a specific finding, and the findings text provides detailed information about that finding, including any additional notes or observations, separated by new lines for clarity.
+                            items:
+                              type: array
+                              items:
+                                report_key:
+                                  type: string
+                                  description: The report key, a unique identifier for the finding.
+                                  example: example_report_key
+                                findings_text:
+                                  type: string
+                                  description: The related findings text, detailing the observations associated with the report key.
+                                  example: 'example_findings_text
+
+
+                                    '
+                      files:
+                        type: object
+                        description: Contains the reports and their related asset URLs. Each asset has a set of URLs which should downloaded for the full result. The assets(SC, SR, PDF etc.) can differ based on you configuration. Every enables asset must be returned.
+                        properties:
+                          sc:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_full_png:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_thumbnail:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_dicom_thumbnail:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          original_thumbnail:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          original:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          report_pdf:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          report_dcm:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          report_sr:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                  usecase:
+                    type: string
+                    description: Describes the usecase.
+                    example: qxr
+        '202':
+          description: The request has been accepted for processing, but the processing is not complete. It's common when predictions or analysis are still underway.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    description: A message that validates the request based on the response status code.
+                    example: processing not started
+        '206':
+          description: A 206 status code is returned when the uploaded DICOM is detected as a valid X-ray modality, but the scan is invalid. In such cases, generated assets (e.g., SC, SR) accompany the response and explicitly state that the DICOM is invalid. These assets ensure consistency with normal processing flows.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Deprecated and shouldn't be used for anything. This is always true generally when present. Maintained for backwards compatibility.
+                    example: true
+                  message:
+                    type: string
+                    description: A human readable message that validates the request based on the response status code.
+                    example: Results retrieved successfully!
+                  triage_status:
+                    type: string
+                    description: An Enum indicating the urgency of results. Either one of `Critical` or `Routine`, where `Routine` indicates that the AI detected no abnormality in the scan, and `Critical` indicates that the AI has detected an abnormality.
+                    example: Routine
+                  result:
+                    type: object
+                    description: Contains the results for the uploaded DICOMs.
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          findings:
+                            type: string
+                            description: A free text report describing the AI results.
+                            example: Invalid X-Ray
+                          impression:
+                            type: string
+                            description: Generally used as a single summary.
+                            example: Uploaded Invalid X-RAY
+                          findings_list:
+                            type: array
+                            description: An array of arrays, where each inner array consists of two elements - a report key and its related findings text. The report key is a unique identifier for a specific finding, and the findings text provides detailed information about that finding, including any additional notes or observations, separated by new lines for clarity.
+                      files:
+                        type: object
+                        description: Contains the reports and their related asset URLs. Each asset has a set of URLs which should downloaded for the full result. The assets(SC, SR, PDF etc.) can differ based on you configuration. Every enables asset must be returned.
+                        properties:
+                          sc:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_full_png:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_thumbnail:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          sc_dicom_thumbnail:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          original_thumbnail:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          original:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          report_pdf:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          report_dcm:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                          report_sr:
+                            type: array
+                            items:
+                              type: string
+                              example: <https://exampleurl.com>
+                  usecase:
+                    type: string
+                    description: Describes the usecase.
+                    example: not_implemented
+        '400':
+          description: This response indicates that the DICOM uploaded is of an unsupported modality or the AI has detected that the scan uploaded is invalid.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: not implemented
+        '401':
+          description: The Authorization header has either no token or a wrong token.
+        '403':
+          description: This response is given when the `Source`  header is missing, incorrect, or when you requested results for a DICOM that doesn't belong to your workspace.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Forbidden
+        '404':
+          description: The result is not found because the corresponding DICOM or series is missing, possibly because it has not been uploaded yet.
+        '500':
+          description: This response occurs when an unknown Qure.ai system failure occurs.
+        '502':
+          description: This indicates that the request failed because the server is down, unresponsive, or unable to communicate with the upstream server, preventing a valid response.
+    servers:
+    - url: BASE_URL
+      description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
+components:
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+x-refined-from:
+- qure.ai-platform-api-xray-ct-openapi.yml
+- qure.ai-platform-api-xray-v2-er-openapi.yml
+x-hideTryItPanel: true
+x-codeSamples: true
