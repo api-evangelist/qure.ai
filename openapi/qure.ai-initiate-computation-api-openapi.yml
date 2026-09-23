@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Qure.ai Initiate Computation API
+  title: Qure Platform Initiate Computation API
+  description: Qure.ai is a state-of-the-art artificial intelligence platform that provides healthcare imaging solutions to help medical professionals make faster and more accurate diagnoses. The Qure Platform APIs offer a programmatic interface for partners to upgrade medical imaging systems with Qure’s AI diagnostic tools.
   version: 3.1.33
-  description: 'Operations tagged Initiate Computation across 2 of this provider''s published API definitions: qure.ai-platform-api-xray-ct-openapi.yml, qure.ai-platform-api-xray-v2-er-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: BASE_URL
   description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
@@ -13,7 +13,7 @@ tags:
 paths:
   /compute/{SeriesInstanceUID}:
     get:
-      summary: Initiate Computation.
+      summary: Initiate Computation
       operationId: initiateComputation
       tags:
       - Initiate Computation
@@ -124,17 +124,11 @@ paths:
                     type: string
                     description: A message that validates the upload request based on the response status code.
                     example: Resource with SeriesInstanceUID <SeriesInstanceUID> is not yet uploaded!
-    servers:
-    - url: BASE_URL
-      description: The BASE_URL is the root address for all your API requests. You must append this to all requests to the Platform API. To obtain this, contact support@qure.ai.
 components:
   securitySchemes:
     TokenAuth:
       type: apiKey
       in: header
       name: Authorization
-x-refined-from:
-- qure.ai-platform-api-xray-ct-openapi.yml
-- qure.ai-platform-api-xray-v2-er-openapi.yml
 x-hideTryItPanel: true
 x-codeSamples: true

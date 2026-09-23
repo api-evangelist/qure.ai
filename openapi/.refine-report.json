@@ -1,0 +1,31 @@
+{
+  "provider": "qure.ai",
+  "sources": [
+    "_original/qure.ai-platform-api-2-openapi-original.yml"
+  ],
+  "outputs": [
+    "qure.ai-fetch-results-api-openapi.yml",
+    "qure.ai-initiate-computation-api-openapi.yml",
+    "qure.ai-upload-dicoms-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "3 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "qure.ai-platform-api-2-openapi-original.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "qure.ai-platform-api-2-openapi-original.yml: declared missing tag: Fetch Results",
+    "qure.ai-platform-api-2-openapi-original.yml: declared missing tag: Initiate Computation",
+    "qure.ai-platform-api-2-openapi-original.yml: declared missing tag: Upload DICOMs",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/qure.ai-platform-api-xray-v2-er-openapi.yml: archived document superseded by a larger archived document",
+    "_original/qure.ai-platform-api-xray-ct-openapi.yml: archived document superseded by a larger archived document",
+    "_original/qure.ai-platform-api-1-openapi-original.yml: archived document superseded by a larger archived document",
+    "qure.ai-fetch-results-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qure.ai-initiate-computation-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "qure.ai-upload-dicoms-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

@@ -1,0 +1,27 @@
+# Front Door AI Index — qure.ai — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: qure.ai
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.qure.ai
+  final_host: www.qure.ai
+  ownership: own
+  owner: qure.ai
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 44
+  host_score: 44
+  density: 13.19
+  words: 3336
+  tiers:
+    agentic: 0
+    core: 44
+    model: 0
+  ambiguous: 8
+  top_terms:
+    AI: 43
+    intelligence: 8
+    artificial intelligence: 1
