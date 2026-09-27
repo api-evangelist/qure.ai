@@ -49,11 +49,11 @@ tags:
 - Healthcare
 - Medical Imaging
 - Radiology
-- Machine-Learning
+- Machine Learning
 - DICOM
 - Diagnostics
 - Clinical Decision Support
-- Health Technology
+- Health Tech
 - Company
 tags_raw:
 - Artificial Intelligence
@@ -66,6 +66,7 @@ tags_raw:
 - Clinical Decision Support
 - Health Technology
 - Company
+- Machine-Learning
 apis:
 - aid: qure.ai:qure.ai-fetch-results-api
   name: Qure.ai Fetch Results API
